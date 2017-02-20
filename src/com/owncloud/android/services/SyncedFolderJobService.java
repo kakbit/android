@@ -50,7 +50,7 @@ public class SyncedFolderJobService extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_REDELIVER_INTENT;
+        return START_NOT_STICKY;
     }
 
     @Override
