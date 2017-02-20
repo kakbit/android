@@ -146,7 +146,7 @@ public class FileAlterationMagicListener implements FileAlterationListener {
                             .setRequiredNetworkType(syncedFolder.getWifiOnly() ? JobInfo.NETWORK_TYPE_UNMETERED :
                                     JobInfo.NETWORK_TYPE_ANY)
                             .setExtras(bundle)
-                            .setPersisted(true)
+                            .setPersisted(false)
                             .build();
 
                     Integer result = js.schedule(job);
