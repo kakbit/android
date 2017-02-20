@@ -85,6 +85,7 @@ public class SyncedFolderJobService extends JobService {
             );
         }
 
+        jobFinished(params, false);
         return false;
     }
 
