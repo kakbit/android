@@ -41,6 +41,7 @@ package com.owncloud.android.services.observer;
 import android.os.SystemClock;
 
 import com.owncloud.android.datamodel.SyncedFolder;
+import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.services.FileAlterationMagicListener;
 
 import org.apache.commons.io.FileUtils;
@@ -54,6 +55,7 @@ import java.io.FileFilter;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -173,12 +175,13 @@ public class FileAlterationMagicObserver extends FileAlterationObserver implemen
      * @throws Exception if an error occurs
      */
     public void destroy() throws Exception {
-        while (getListeners().iterator().hasNext()) {
-            FileAlterationMagicListener fileAlterationListener = (FileAlterationMagicListener)
-                    getListeners().iterator().next();
+        Iterator iterator = getListeners().iterator();
+        while (iterator.hasNext()) {
+            FileAlterationMagicListener fileAlterationListener = (FileAlterationMagicListener) iterator.next();
             while (fileAlterationListener.getActiveTasksCount() > 0) {
                 SystemClock.sleep(250);
             }
+
         }
     }
 
@@ -197,7 +200,18 @@ public class FileAlterationMagicObserver extends FileAlterationObserver implemen
         if (rootFile.exists()) {
             checkAndNotify(rootEntry, rootEntry.getChildren(), listFiles(rootFile));
         } else if (rootEntry.isExists()) {
-            checkAndNotify(rootEntry, rootEntry.getChildren(), FileUtils.EMPTY_FILE_ARRAY);
+            try {
+                // try to init once more
+                init();
+                if (rootEntry.getFile().exists()) {
+                    checkAndNotify(rootEntry, rootEntry.getChildren(), listFiles(rootEntry.getFile()));
+                } else {
+                    checkAndNotify(rootEntry, rootEntry.getChildren(), FileUtils.EMPTY_FILE_ARRAY);
+                }
+            } catch (Exception e) {
+                Log_OC.d("FileAlterationMagicObserver", "Failed getting an observer to intialize " + e);
+                checkAndNotify(rootEntry, rootEntry.getChildren(), FileUtils.EMPTY_FILE_ARRAY);
+            }
         } // else didn't exist and still doesn't
 
         /* fire onStop() */
