@@ -21,6 +21,7 @@ package com.owncloud.android;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -28,10 +29,12 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.util.Pair;
 
 import com.owncloud.android.authentication.PassCodeManager;
@@ -266,9 +269,13 @@ public class MainApp extends Application {
         return userAgent;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void cleanOldEntries() {
         // previous versions of application created broken entries in the syncedfolderprovider
         // database, and this cleans all that and leaves 1 (newest) entry per synced folder
+
+        JobScheduler js = (JobScheduler) getAppContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        js.cancelAll();
 
         if (!PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("legacyClean", false)) {
             SyncedFolderProvider syncedFolderProvider = new SyncedFolderProvider(MainApp.getAppContext().getContentResolver());
