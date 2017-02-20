@@ -61,6 +61,7 @@ public class SyncedFolderObserverService extends Service {
 
 
         for (SyncedFolder syncedFolder : syncedFolderProvider.getSyncedFolders()) {
+            Log_OC.d(TAG, "STARTING THE SYNC SERVICE WITH FOLDERS: " + syncedFolderProvider.getSyncedFolders().size());
             if (syncedFolder.isEnabled()) {
                 FileAlterationMagicObserver observer = new FileAlterationMagicObserver(syncedFolder, fileFilter);
 
@@ -68,6 +69,7 @@ public class SyncedFolderObserverService extends Service {
                     observer.init();
                     observer.addListener(new FileAlterationMagicListener(syncedFolder));
                     monitor.addObserver(observer);
+                    Log_OC.d(TAG, "ADDED OBSERVER " + syncedFolder.getAccount() + " " + syncedFolder.getLocalPath());
                 } catch (Exception e) {
                     Log_OC.d(TAG, "Failed getting an observer to intialize " + e);
                 }
