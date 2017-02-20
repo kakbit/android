@@ -92,8 +92,11 @@ public class FileAlterationMagicListener implements FileAlterationListener {
 
     @Override
     public void onFileCreate(final File file) {
+
         if (file != null) {
             filesList.add(file.getAbsolutePath());
+            Log_OC.d(TAG, "NEW FILE CREATED: " + file.getAbsolutePath());
+
 
             String mimetypeString = FileStorageUtils.getMimeTypeFromName(file.getAbsolutePath());
             Long lastModificationTime = file.lastModified();

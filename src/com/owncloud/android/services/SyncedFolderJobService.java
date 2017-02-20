@@ -50,7 +50,7 @@ public class SyncedFolderJobService extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     @Override
@@ -84,6 +84,7 @@ public class SyncedFolderJobService extends JobService {
                     UploadFileOperation.CREATED_AS_INSTANT_PICTURE
             );
         }
+
         return false;
     }
 
