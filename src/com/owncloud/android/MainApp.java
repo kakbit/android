@@ -120,9 +120,9 @@ public class MainApp extends Application {
         cleanOldEntries();
         
         Log_OC.d("SyncedFolderObserverService", "Start service SyncedFolderObserverService");
-        Intent i = new Intent(this, SyncedFolderObserverService.class);
+        /*Intent i = new Intent(this, SyncedFolderObserverService.class);
         startService(i);
-        bindService(i, syncedFolderObserverServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(i, syncedFolderObserverServiceConnection, Context.BIND_AUTO_CREATE);*/
 
 
         // register global protection with pass code
